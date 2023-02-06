@@ -4,16 +4,7 @@ export const useClientLayoutStore = defineStore("clientLayoutStore", {
     state: () => ({
         isCollapse: false,
         menuActive: '1',
-        breadcrumb: [
-            {
-                name: 'Home',
-                path: '/'
-            },
-            {
-                name: 'Dashboard',
-                path: '/dashboard'
-            }
-        ],
+        breadcrumb: [],
         tags: [
         ],
     }),
@@ -41,6 +32,9 @@ export const useClientLayoutStore = defineStore("clientLayoutStore", {
         removeTag(tag: any) {
             let index = this.tags.findIndex((item: any) => item.name === tag.name)
             this.tags.splice(index, 1)
+        },
+        updateBreadcrumb(breadcrumb: any) {
+            this.breadcrumb = breadcrumb
         }
     }
 })
