@@ -12,7 +12,6 @@
     <el-carousel-item>
       <img src="../assets/images/client/home/1.jpg">
     </el-carousel-item>
-
   </el-carousel>
 </template>
 

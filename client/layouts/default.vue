@@ -40,12 +40,18 @@
           </el-breadcrumb-item>
         </el-breadcrumb>
         <el-dropdown style="margin-left: auto">
-          <el-avatar :icon="UserFilled" />
+          <el-avatar :icon="UserFilled"/>
           <template #dropdown>
-            <el-dropdown-menu>
+            <el-dropdown-menu v-if="userStore.getUser == null">
+              <NuxtLink :to="{name: 'auth-login'}">
+                <el-dropdown-item>Sign in</el-dropdown-item>
+              </NuxtLink>
+              <el-dropdown-item>Sign up</el-dropdown-item>
+            </el-dropdown-menu>
+            <el-dropdown-menu v-else>
               <el-dropdown-item>Profile</el-dropdown-item>
-              <el-dropdown-item disabled>Điểm: 30</el-dropdown-item>
-              <el-dropdown-item divided>Đăng xuất</el-dropdown-item>
+              <el-dropdown-item disabled>{{ userStore.user.name }}</el-dropdown-item>
+              <el-dropdown-item divided @click="logout">Đăng xuất</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -69,6 +75,9 @@
 import {Fold, HomeFilled, UserFilled} from '@element-plus/icons-vue'
 import Logo from "~/components/common/logo.vue";
 import {useClientLayoutStore} from "~/stores/clientStore/clientLayoutStore";
+import Cookies from "js-cookie";
+import axios from "axios";
+import {useAuthUserStore} from "~/stores/authUserStore";
 
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath)
@@ -78,14 +87,34 @@ const handleClose = (key, keyPath) => {
 }
 
 const clientLayoutStore = useClientLayoutStore()
+const userStore = useAuthUserStore()
+const token = Cookies.get('access_token')
+const loading = ref(false)
+
+if (token && userStore.getUser == null) {
+  userStore.fetchUser()
+}
 
 const collapse = () => {
   clientLayoutStore.setIsCollapse()
 }
+
+const logout = () => {
+  axios.get(API_URL + 'auth/logout', generateHeader()).then(res => {
+    Cookies.remove('access_token')
+    userStore.setUser(null)
+    this.$router.push({name: 'auth-login'})
+  }).catch(err => {
+    console.log(err)
+  })
+}
+
+
 </script>
 
 <script>
 import {ref} from 'vue'
+import generateHeader from "~/composables/common";
 
 
 export default {
@@ -138,5 +167,9 @@ export default {
 .header .el-icon.active {
   transform: rotate(0deg);
   transition: 0.5s;
+}
+
+a {
+  text-decoration: none;
 }
 </style>

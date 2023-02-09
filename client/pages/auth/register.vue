@@ -1,0 +1,643 @@
+<template>
+  <div class="limiter">
+    <div class="container-login100">
+      <div class="wrap-login100 p-l-85 p-r-85 p-t-55 p-b-55">
+        <div class="login100-form validate-form flex-sb flex-w" style="padding: 15px">
+          <span class="login100-form-title p-b-32" style="margin-bottom: 15px;text-align: center">
+            Sign up
+          </span>
+          <span class="txt1 p-b-11" style="margin-top: 15px;">
+            Email
+          </span>
+          <div class="wrap-input100 validate-input m-b-36" data-validate="Email is required"
+               style="margin-bottom: 15px;">
+            <input class="input100" type="email" name="email" v-model="user.email">
+            <span class="focus-input100"></span>
+          </div>
+          <span class="txt1 p-b-11" style="margin-top: 15px;">
+            Email
+          </span>
+          <div class="wrap-input100 validate-input m-b-36" data-validate="Name is required"
+               style="margin-bottom: 15px;">
+            <input class="input100" type="text" name="name" v-model="user.name">
+            <span class="focus-input100"></span>
+          </div>
+          <span class="txt1 p-b-11" style="margin-top: 15px;">
+            Password
+          </span>
+          <div class="wrap-input100 validate-input m-b-12" data-validate="Password is required"
+               style="margin-bottom: 15px;">
+            <span class="btn-show-pass">
+              <i class="fa fa-eye"></i>
+            </span>
+            <input class="input100" type="password" name="pass" v-model="user.password">
+            <span class="focus-input100"></span>
+          </div>
+          <span class="txt1 p-b-11" style="margin-top: 15px;">
+            Password Confirmation
+          </span>
+          <div class="wrap-input100 validate-input m-b-12" data-validate="Password confirmation is required"
+               style="margin-bottom: 15px;">
+            <span class="btn-show-pass">
+              <i class="fa fa-eye"></i>
+            </span>
+            <input class="input100" type="password" name="pass_confirmation" v-model="user.password_confirmation">
+            <span class="focus-input100"></span>
+          </div>
+          <span class="txt1 p-b-11" style="margin-top: 15px;">
+            Phone number
+          </span>
+          <div class="wrap-input100 validate-input m-b-12" data-validate="Phone number is required"
+               style="margin-bottom: 15px;">
+            <span class="btn-show-pass">
+              <i class="fa fa-eye"></i>
+            </span>
+            <input class="input100" type="text" name="password_confirmation" v-model="user.phone_number">
+            <span class="focus-input100"></span>
+          </div>
+          <span class="txt1 p-b-11" style="margin-top: 15px;">
+            Address
+          </span>
+          <div class="wrap-input100 validate-input m-b-12" data-validate="Address is required"
+               style="margin-bottom: 15px;">
+            <span class="btn-show-pass">
+              <i class="fa fa-eye"></i>
+            </span>
+            <input class="input100" type="text" name="address" v-model="user.address">
+            <span class="focus-input100"></span>
+          </div>
+          <div class="" style="display:flex; justify-content: space-between;">
+            <div>
+              Already have an account?
+              <NuxtLink :to="{name: 'auth-login'}">Login</NuxtLink>
+            </div>
+            <div>
+              <a href="#" class="txt3">
+                Forgot Password?
+              </a>
+            </div>
+          </div>
+          <div class="container-login100-form-btn" style="margin-top: 15px;">
+            <button class="login100-form-btn" @click="submit">
+              Register
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="dropDownSelect1"></div>
+</template>
+
+<script setup>
+definePageMeta({
+  meta: [
+    {
+      content: 'Register page'
+    }
+  ],
+  layout: 'auth'
+})
+
+useSeoMeta({
+  title: 'Register',
+  description: 'Register page'
+})
+</script>
+
+<script>
+import axios from "axios";
+import {getErrorMessage} from "~/composables/validateMessage";
+export default {
+  name: "register",
+  data() {
+    return {
+      user: {
+        email: 'quynb201@gmail.com',
+        name: 'QuyNB',
+        password: '12345678',
+        password_confirmation: '12345678',
+        phone_number: '0123456789',
+        address: 'Hai Duong'
+      }
+    }
+  },
+  methods: {
+    submit() {
+      let validate = validateRequired(this.user)
+      if (validate) {
+        ElNotification({
+          title: 'Error',
+          message: validate,
+          type: 'error',
+        })
+        return;
+      }
+      if (this.user.password !== this.user.password_confirmation) {
+        ElNotification({
+          title: 'Error',
+          message: 'Password confirmation does not match',
+          type: 'error',
+        })
+        return;
+      }
+      axios.post(API_URL + 'auth/signup', this.user)
+        .then(res => {
+          ElNotification({
+            title: 'Success',
+            message: res.data.message,
+            type: 'success',
+          })
+          this.$router.push({name: 'auth-login'})
+        })
+        .catch(err => {
+          console.log(err)
+          ElNotification({
+            title: 'Error',
+            message: getErrorMessage(err),
+            type: 'error',
+          })
+        })
+    }
+  }
+}
+</script>
+
+<style scoped>
+@font-face {
+  font-family: Raleway-Regular;
+  src: url(../fonts/raleway/Raleway-Regular.ttf)
+}
+
+@font-face {
+  font-family: Raleway-Medium;
+  src: url(../fonts/raleway/Raleway-Medium.ttf)
+}
+
+@font-face {
+  font-family: Raleway-SemiBold;
+  src: url(../fonts/raleway/Raleway-SemiBold.ttf)
+}
+
+@font-face {
+  font-family: Raleway-Bold;
+  src: url(../fonts/raleway/Raleway-Bold.ttf)
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box
+}
+
+body, html {
+  height: 100%;
+  font-family: Raleway-Regular, sans-serif
+}
+
+a {
+  font-family: Raleway-Regular;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #666;
+  margin: 0;
+  transition: all .4s;
+  -webkit-transition: all .4s;
+  -o-transition: all .4s;
+  -moz-transition: all .4s
+}
+
+a:focus {
+  outline: none !important
+}
+
+a:hover {
+  text-decoration: none;
+  color: #57b846
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0
+}
+
+p {
+  font-family: Raleway-Regular;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #666;
+  margin: 0
+}
+
+ul, li {
+  margin: 0;
+  list-style-type: none
+}
+
+input {
+  outline: none;
+  border: none
+}
+
+textarea {
+  outline: none;
+  border: none
+}
+
+textarea:focus, input:focus {
+  border-color: transparent !important
+}
+
+input:focus::-webkit-input-placeholder {
+  color: transparent
+}
+
+input:focus:-moz-placeholder {
+  color: transparent
+}
+
+input:focus::-moz-placeholder {
+  color: transparent
+}
+
+input:focus:-ms-input-placeholder {
+  color: transparent
+}
+
+textarea:focus::-webkit-input-placeholder {
+  color: transparent
+}
+
+textarea:focus:-moz-placeholder {
+  color: transparent
+}
+
+textarea:focus::-moz-placeholder {
+  color: transparent
+}
+
+textarea:focus:-ms-input-placeholder {
+  color: transparent
+}
+
+input::-webkit-input-placeholder {
+  color: #999
+}
+
+input:-moz-placeholder {
+  color: #999
+}
+
+input::-moz-placeholder {
+  color: #999
+}
+
+input:-ms-input-placeholder {
+  color: #999
+}
+
+textarea::-webkit-input-placeholder {
+  color: #999
+}
+
+textarea:-moz-placeholder {
+  color: #999
+}
+
+textarea::-moz-placeholder {
+  color: #999
+}
+
+textarea:-ms-input-placeholder {
+  color: #999
+}
+
+label {
+  display: block;
+  margin: 0
+}
+
+button {
+  outline: none !important;
+  border: none;
+  background: 0 0
+}
+
+button:hover {
+  cursor: pointer
+}
+
+iframe {
+  border: none !important
+}
+
+.txt1 {
+  font-family: Raleway-SemiBold;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.4;
+  text-transform: uppercase
+}
+
+.txt2 {
+  font-family: Raleway-Regular;
+  font-size: 13px;
+  color: #999;
+  line-height: 1.4
+}
+
+.txt3 {
+  font-family: Raleway-Regular;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.4
+}
+
+.limiter {
+  width: 100%;
+  margin: 0 auto
+}
+
+.container-login100 {
+  width: 100%;
+  min-height: 100vh;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  background-color: #ebebeb
+}
+
+.wrap-login100 {
+  width: 560px;
+  background: #fff;
+  border-radius: 10px;
+  position: relative
+}
+
+.login100-form {
+  width: 100%
+}
+
+.login100-form-title {
+  font-family: Raleway-Medium;
+  font-size: 30px;
+  color: #555;
+  line-height: 1.2;
+  text-transform: uppercase;
+  text-align: left;
+  width: 100%;
+  display: block
+}
+
+.wrap-input100 {
+  width: 100%;
+  position: relative;
+  background-color: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 2px
+}
+
+.input100 {
+  font-family: Raleway-Medium;
+  color: #555;
+  line-height: 1.2;
+  font-size: 18px;
+  display: block;
+  width: 100%;
+  background: 0 0;
+  height: 55px;
+  padding: 0 25px
+}
+
+.focus-input100 {
+  position: absolute;
+  display: block;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  top: -1px;
+  left: -1px;
+  pointer-events: none;
+  border: 1px solid #57b846;
+  border-radius: 3px;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: all .4s;
+  -o-transition: all .4s;
+  -moz-transition: all .4s;
+  transition: all .4s;
+  -webkit-transform: scaleX(1.1) scaleY(1.3);
+  -moz-transform: scaleX(1.1) scaleY(1.3);
+  -ms-transform: scaleX(1.1) scaleY(1.3);
+  -o-transform: scaleX(1.1) scaleY(1.3);
+  transform: scaleX(1.1) scaleY(1.3)
+}
+
+.input100:focus + .focus-input100 {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  -o-transform: scale(1);
+  transform: scale(1)
+}
+
+.eff-focus-selection {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  -o-transform: scale(1);
+  transform: scale(1)
+}
+
+.btn-show-pass {
+  font-size: 15px;
+  color: #999;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  height: 100%;
+  top: 0;
+  right: 12px;
+  padding: 0 5px;
+  cursor: pointer;
+  -webkit-transition: background .4s;
+  -o-transition: background .4s;
+  -moz-transition: background .4s;
+  transition: background .4s
+}
+
+.btn-show-pass:hover {
+  color: #57b846
+}
+
+.btn-show-pass.active {
+  color: #57b846
+}
+
+.input-checkbox100 {
+  display: none
+}
+
+.label-checkbox100 {
+  font-family: Raleway-Regular;
+  font-size: 13px;
+  color: #999;
+  line-height: 1.4;
+  display: block;
+  position: relative;
+  padding-left: 26px;
+  cursor: pointer
+}
+
+.label-checkbox100::before {
+  content: "\f00c";
+  font-family: FontAwesome;
+  font-size: 13px;
+  color: transparent;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%)
+}
+
+.input-checkbox100:checked + .label-checkbox100::before {
+  color: #57b846
+}
+
+.container-login100-form-btn {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap
+}
+
+.login100-form-btn {
+  font-family: Raleway-Bold;
+  font-size: 16px;
+  color: #fff;
+  line-height: 1.2;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  min-width: 150px;
+  height: 55px;
+  background-color: #333;
+  border-radius: 27px;
+  -webkit-transition: all .4s;
+  -o-transition: all .4s;
+  -moz-transition: all .4s;
+  transition: all .4s
+}
+
+.login100-form-btn:hover {
+  background-color: #57b846
+}
+
+.validate-input {
+  position: relative
+}
+
+.alert-validate .btn-show-pass {
+  visibility: hidden
+}
+
+.alert-validate::before {
+  content: attr(data-validate);
+  position: absolute;
+  max-width: 70%;
+  background-color: #fff;
+  border: 1px solid #c80000;
+  border-radius: 3px;
+  padding: 4px 25px 5px 10px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: 12px;
+  pointer-events: none;
+  font-family: Raleway-Medium;
+  color: #c80000;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: left;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: opacity .4s;
+  -o-transition: opacity .4s;
+  -moz-transition: opacity .4s;
+  transition: opacity .4s
+}
+
+.alert-validate::after {
+  content: "\f12a";
+  font-family: FontAwesome;
+  display: block;
+  position: absolute;
+  color: #c80000;
+  font-size: 18px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: 18px
+}
+
+.alert-validate:hover:before {
+  visibility: visible;
+  opacity: 1
+}
+
+@media (max-width: 992px) {
+  .alert-validate::before {
+    visibility: visible;
+    opacity: 1
+  }
+}
+
+@media (max-width: 576px) {
+  .wrap-login100 {
+    padding-left: 15px;
+    padding-right: 15px
+  }
+}
+</style>
