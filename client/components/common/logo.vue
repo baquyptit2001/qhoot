@@ -1,7 +1,9 @@
 <template>
-  <div class="logo">
-    Q<span v-if="showText">HOOT</span>
-  </div>
+  <NuxtLink :to="{name: 'index'}">
+    <div class="logo">
+      Q<span v-if="showText">HOOT</span>
+    </div>
+  </NuxtLink>
 </template>
 
 <script>
@@ -27,6 +29,8 @@ export default {
   justify-content: center;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
+  cursor: pointer;
+  color: black;
 }
 
 </style>

@@ -33,12 +33,17 @@
             <Fold/>
           </el-icon>
         </div>
-        <el-breadcrumb separator="/">
-          <el-breadcrumb-item v-for="bread in clientLayoutStore.breadcrumb" :to="bread.path">{{
-              bread.name
-            }}
-          </el-breadcrumb-item>
-        </el-breadcrumb>
+        <marquee style="margin-right: auto; font-size: 20px" behavior="scroll" direction="left" scrollamount="10">
+          <div>
+            <div v-for="weather in weathers" style="margin-right: 10px; display: inline-block">
+              <img style="margin-bottom: -15px"
+                   :src="`https://developer.accuweather.com/sites/default/files/${pad(weather.weather.WeatherIcon, 2)}-s.png`"/>
+              <span style="height: 100px;line-height: 100px">{{
+                  weather.name
+                }}({{ farenheitToCelsius(weather.weather.Temperature.Value) }}℃)</span>
+            </div>
+          </div>
+        </marquee>
         <el-dropdown style="margin-left: auto">
           <el-avatar :icon="UserFilled"/>
           <template #dropdown>
@@ -50,6 +55,9 @@
             </el-dropdown-menu>
             <el-dropdown-menu v-else>
               <el-dropdown-item>Profile</el-dropdown-item>
+              <NuxtLink :to="{name: 'topics'}">
+                <el-dropdown-item>Bộ đề</el-dropdown-item>
+              </NuxtLink>
               <el-dropdown-item disabled>{{ userStore.user.name }}</el-dropdown-item>
               <el-dropdown-item divided @click="logout">Đăng xuất</el-dropdown-item>
             </el-dropdown-menu>
@@ -57,9 +65,10 @@
         </el-dropdown>
       </div>
       <div style="margin: 15px 0;">
-        <el-tag style="cursor:pointer;" v-for="tag in clientLayoutStore.tags" @click="redirect(tag.path)"
+        <el-tag style="cursor:pointer;margin-right: 5px;" v-for="tag in clientLayoutStore.tags"
+                @click="redirect(tag.path)"
                 :effect="tag.active ? 'dark' : 'light'" :key="tag.path" :round="true" :closable="true"
-                @close="clientLayoutStore.removeTag(tag)">{{ tag.name }}
+                @close="closeTag(tag)">{{ tag.name }}
         </el-tag>
       </div>
       <el-divider style="margin-top: 0"></el-divider>
@@ -78,6 +87,9 @@ import {useClientLayoutStore} from "~/stores/clientStore/clientLayoutStore";
 import Cookies from "js-cookie";
 import axios from "axios";
 import {useAuthUserStore} from "~/stores/authUserStore";
+import {useRouter} from 'vue-router';
+
+const router = useRouter()
 
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath)
@@ -99,11 +111,18 @@ const collapse = () => {
   clientLayoutStore.setIsCollapse()
 }
 
+const closeTag = (tag) => {
+  clientLayoutStore.removeTag(tag)
+  if (tag.active) {
+    router.back()
+  }
+}
+
 const logout = () => {
   axios.get(API_URL + 'auth/logout', generateHeader()).then(res => {
     Cookies.remove('access_token')
     userStore.setUser(null)
-    this.$router.push({name: 'auth-login'})
+    router.push({name: 'auth-login'})
   }).catch(err => {
     console.log(err)
   })
@@ -119,13 +138,74 @@ import generateHeader from "~/composables/common";
 
 export default {
   name: "default",
-  mounted() {
+  async mounted() {
+    await this.getWeather()
+    console.log(this.weathers)
   },
+  computed: {},
   methods: {
     redirect(path) {
-      this.$router.push(path)
+      let destination = {name: path.name}
+      if (path.params != null) {
+        destination.params = path.params
+      }
+      this.$router.push(destination)
+    },
+    farenheitToCelsius(temp) {
+      return Math.round((temp - 32) * 5 / 9)
+    },
+    pad(num, size) {
+      num = num.toString();
+      while (num.length < size) num = "0" + num;
+      return num;
+    },
+    async getWeather() {
+      for (const item of this.locationCode) {
+        await axios.get(this.weatherUrl + item.code + '?apikey=' + WEATHER_API_KEY + '&language=vi-vn&details=false').then(res => {
+          this.weathers.push({
+            name: item.name,
+            weather: res.data[0]
+          })
+        })
+      }
     }
   },
+  data() {
+    return {
+      weatherUrl: 'http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/',
+      weathers: [],
+      locationCode: [
+        {
+          name: 'Hà Nội',
+          code: '353412'
+        },
+        {
+          name: 'Hồ Chí Minh',
+          code: '353981'
+        },
+        {
+          name: 'Hải Dương',
+          code: '353501'
+        },
+        {
+          name: 'Hải Phòng',
+          code: '353511'
+        },
+        {
+          name: 'Sa Pa',
+          code: '416623'
+        },
+        {
+          name: 'Đà Lạt',
+          code: '354287'
+        },
+        {
+          name: 'Đà Nẵng',
+          code: '352954'
+        }
+      ]
+    }
+  }
 }
 </script>
 

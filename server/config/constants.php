@@ -7,4 +7,7 @@ return [
             'admin' => 2,
         ],
     ],
+    'url' => [
+        'FE_URL' => env('FE_URL', 'http://localhost:3000/'),
+    ],
 ];

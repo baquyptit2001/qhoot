@@ -1,4 +1,3 @@
 export const URL =  'http://localhost:3000'
-export const API_URL =  'http://localhost:8000/api/'
-export const LOGIN_URL =  URL + '/auth/login'
-export const REGISTER_URL = URL + '/auth/register'
+export const API_URL =  'http://localhost:8003/api/'
+export const WEATHER_API_KEY = 'nXAyW0rGwufm0y14qYfx2SyAVk25mWdn'

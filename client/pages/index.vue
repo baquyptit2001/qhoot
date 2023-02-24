@@ -32,14 +32,11 @@ export default defineComponent({
   mounted() {
     this.clientLayoutStore.addTag({
       name: 'Home',
-      path: '/'
-    })
-    this.clientLayoutStore.updateBreadcrumb([
-      {
-        name: 'Home',
-        path: '/'
+      path: {
+        name: 'index',
+        params: null
       }
-    ])
+    })
   }
 })
 </script>

@@ -27,11 +27,11 @@ class SignUpRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'bail|required|string|max:255',
-            'email' => 'bail|required|string|email|max:255|unique:users',
-            'password' => 'bail|required|string|min:8|confirmed',
-            'phone' => 'bail|nullable|string|max:255',
-            'address' => 'bail|nullable|string|max:255',
+            'name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|bail|required|string|email|max:255|unique:users',
+            'password' => 'sometimes|bail|required|string|min:8|confirmed',
+            'phone' => 'sometimes|bail|nullable|string|max:255',
+            'address' => 'sometimes|bail|nullable|string|max:255',
         ];
     }
 }

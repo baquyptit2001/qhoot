@@ -4,82 +4,30 @@
       <div class="wrap-login100 p-l-85 p-r-85 p-t-55 p-b-55">
         <div class="login100-form validate-form flex-sb flex-w" style="padding: 15px">
           <span class="login100-form-title p-b-32" style="margin-bottom: 15px;text-align: center">
-            Sign up
+            Reset Password
           </span>
           <span class="txt1 p-b-11" style="margin-top: 15px;">
-            Email
+            Password
           </span>
           <div class="wrap-input100 validate-input m-b-36" data-validate="Email is required"
                style="margin-bottom: 15px;">
-            <input class="input100" type="email" name="email" v-model="user.email">
+            <input class="input100" type="password" name="email" v-model="user.password">
             <span class="focus-input100"></span>
           </div>
           <span class="txt1 p-b-11" style="margin-top: 15px;">
-            Name
-          </span>
-          <div class="wrap-input100 validate-input m-b-36" data-validate="Name is required"
-               style="margin-bottom: 15px;">
-            <input class="input100" type="text" name="name" v-model="user.name">
-            <span class="focus-input100"></span>
-          </div>
-          <span class="txt1 p-b-11" style="margin-top: 15px;">
-            Password
+            Password Confirmation
           </span>
           <div class="wrap-input100 validate-input m-b-12" data-validate="Password is required"
                style="margin-bottom: 15px;">
             <span class="btn-show-pass">
               <i class="fa fa-eye"></i>
             </span>
-            <input class="input100" type="password" name="pass" v-model="user.password">
+            <input class="input100" type="password" name="pass" v-model="user.password_confirmation">
             <span class="focus-input100"></span>
-          </div>
-          <span class="txt1 p-b-11" style="margin-top: 15px;">
-            Password Confirmation
-          </span>
-          <div class="wrap-input100 validate-input m-b-12" data-validate="Password confirmation is required"
-               style="margin-bottom: 15px;">
-            <span class="btn-show-pass">
-              <i class="fa fa-eye"></i>
-            </span>
-            <input class="input100" type="password" name="pass_confirmation" v-model="user.password_confirmation">
-            <span class="focus-input100"></span>
-          </div>
-          <span class="txt1 p-b-11" style="margin-top: 15px;">
-            Phone number
-          </span>
-          <div class="wrap-input100 validate-input m-b-12" data-validate="Phone number is required"
-               style="margin-bottom: 15px;">
-            <span class="btn-show-pass">
-              <i class="fa fa-eye"></i>
-            </span>
-            <input class="input100" type="text" name="password_confirmation" v-model="user.phone_number">
-            <span class="focus-input100"></span>
-          </div>
-          <span class="txt1 p-b-11" style="margin-top: 15px;">
-            Address
-          </span>
-          <div class="wrap-input100 validate-input m-b-12" data-validate="Address is required"
-               style="margin-bottom: 15px;">
-            <span class="btn-show-pass">
-              <i class="fa fa-eye"></i>
-            </span>
-            <input class="input100" type="text" name="address" v-model="user.address">
-            <span class="focus-input100"></span>
-          </div>
-          <div class="" style="display:flex; justify-content: space-between;">
-            <div>
-              Already have an account?
-              <NuxtLink :to="{name: 'auth-login'}">Login</NuxtLink>
-            </div>
-            <div>
-              <a href="#" class="txt3">
-                Forgot Password?
-              </a>
-            </div>
           </div>
           <div class="container-login100-form-btn" style="margin-top: 15px;">
-            <el-button type="success" @click="submit" round class="login100-form-btn" v-loading="loading">
-              Register
+            <el-button v-loading="loading" type="success" round class="login100-form-btn" @click="reset">
+              Reset Password
             </el-button>
           </div>
         </div>
@@ -87,69 +35,62 @@
     </div>
   </div>
   <div id="dropDownSelect1"></div>
+
 </template>
 
 <script setup>
 definePageMeta({
   meta: [
     {
-      content: 'Register page'
+      content: 'Reset Password Page',
     }
   ],
-  layout: 'auth'
+  layout: 'auth',
+  middleware: ['auth']
 })
 
 useSeoMeta({
-  title: 'Register',
-  description: 'Register page'
+  title: 'Reset Password',
+  description: 'Reset Password',
 })
 </script>
 
 <script>
+import {ElNotification} from "element-plus";
+import Cookies from 'js-cookie'
 import axios from "axios";
-import {getErrorMessage} from "~/composables/validateMessage";
+import {useAuthUserStore} from "~/stores/authUserStore";
 
 export default {
-  name: "register",
+  name: "[token]",
   data() {
     return {
       user: {
-        email: 'quynb201@gmail.com',
-        name: 'QuyNB',
-        password: '12345678',
-        password_confirmation: '12345678',
-        phone_number: '0123456789',
-        address: 'Hai Duong'
+        password: '',
+        password_confirmation: '',
       },
+      userStore: useAuthUserStore(),
       loading: false
     }
   },
   methods: {
-    submit() {
+    reset() {
+      this.loading = true
       let validate = validateRequired(this.user)
       if (validate) {
         ElNotification({
           title: 'Error',
           message: validate,
-          type: 'error',
+          type: 'error'
         })
-        return;
+        return this.loading = false
       }
-      if (this.user.password !== this.user.password_confirmation) {
-        ElNotification({
-          title: 'Error',
-          message: 'Password confirmation does not match',
-          type: 'error',
-        })
-        return;
-      }
-      this.loading = true
-      axios.post(API_URL + 'auth/signup', this.user)
+      axios.post(API_URL + 'auth/reset_password/' + this.$route.params.token, this.user)
           .then(res => {
             ElNotification({
-              title: 'Success',
-              message: res.data.message,
-              type: 'success',
+              title: 'Thành công',
+              message: 'Cập nhật mật khẩu thành công',
+              type: 'success'
             })
             this.$router.push({name: 'auth-login'})
           })
@@ -157,8 +98,8 @@ export default {
             console.log(err)
             ElNotification({
               title: 'Error',
-              message: getErrorMessage(err),
-              type: 'error',
+              message: err.response.data.message,
+              type: 'error'
             })
           })
           .finally(() => {

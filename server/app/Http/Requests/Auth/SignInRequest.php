@@ -27,8 +27,8 @@ class SignInRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'bail|required|string|email|max:255',
-            'password' => 'bail|required|string|min:8',
+            'email' => 'sometimes|bail|required|string|email|max:255',
+            'password' => 'sometimes|bail|required|string|min:8',
         ];
     }
 }
