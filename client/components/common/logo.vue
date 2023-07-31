@@ -33,4 +33,8 @@ export default {
   color: black;
 }
 
+a {
+  text-decoration: none;
+}
+
 </style>

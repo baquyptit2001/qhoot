@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('topics', function (Blueprint $table) {
             $table->id();
             $table->string('name')->max(255);
-            $table->string('slug')->max(255);
             $table->string('description')->max(255);
             $table->string('image')->max(255);
             $table->unsignedBigInteger('user_id');

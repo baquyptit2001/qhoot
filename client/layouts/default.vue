@@ -46,7 +46,7 @@
         </marquee>
         <el-dropdown style="margin-left: auto">
           <el-avatar :icon="UserFilled"/>
-          <template #dropdown>
+          <template #dropdown> 
             <el-dropdown-menu v-if="userStore.getUser == null">
               <NuxtLink :to="{name: 'auth-login'}">
                 <el-dropdown-item>Sign in</el-dropdown-item>
@@ -58,7 +58,9 @@
               <NuxtLink :to="{name: 'topics'}">
                 <el-dropdown-item>Bộ đề</el-dropdown-item>
               </NuxtLink>
-              <el-dropdown-item disabled>{{ userStore.user.name }}</el-dropdown-item>
+              <NuxtLink :to="{name: 'quiz-room'}">
+                <el-dropdown-item>Tạo phòng</el-dropdown-item>
+              </NuxtLink>
               <el-dropdown-item divided @click="logout">Đăng xuất</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -140,7 +142,6 @@ export default {
   name: "default",
   async mounted() {
     await this.getWeather()
-    console.log(this.weathers)
   },
   computed: {},
   methods: {

@@ -28,9 +28,7 @@ class CreateCategory extends Command
      */
     public function handle()
     {
-        //input category name
         $name = $this->ask('Enter category name');
-        //input category description
         $description = $this->ask('Enter category description');
         $category = new Category();
         $category->name = $name;

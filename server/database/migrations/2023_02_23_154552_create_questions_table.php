@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('description')->max(255);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('topic_id');
-            $table->unsignedBigInteger('correct_answer_id');
             $table->unsignedSmallInteger('sort_order');
             $table->timestamps();
         });

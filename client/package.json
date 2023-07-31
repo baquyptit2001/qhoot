@@ -14,7 +14,7 @@
     "dev": "nuxi dev",
     "build": "nuxi build",
     "preview": "nuxi preview",
-    "start": "node .output/server/index.mjs",
+    "start": "npm run dev",
     "generate": "nuxi generate"
   },
   "devDependencies": {
@@ -37,5 +37,9 @@
         "vue"
       ]
     }
+  },
+  "dependencies": {
+    "laravel-echo": "^1.15.1",
+    "pusher-js": "^8.0.2"
   }
 }

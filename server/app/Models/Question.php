@@ -13,7 +13,6 @@ class Question extends Model
         'description',
         'topic_id',
         'user_id',
-        'correct_answer_id',
         'sort_order',
     ];
 

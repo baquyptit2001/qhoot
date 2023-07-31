@@ -1,5 +1,5 @@
 // https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
-export default defineNuxtConfig({
+export default ({
   app: {
     // head
     head: {
@@ -15,7 +15,6 @@ export default defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     }
   },
-
   // css
   css: ['~/assets/scss/index.scss'],
 

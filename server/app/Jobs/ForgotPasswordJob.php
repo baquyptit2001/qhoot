@@ -42,7 +42,7 @@ class ForgotPasswordJob implements ShouldQueue
         Log::channel('mail')->info($url);
         $user = $this->user;
         Mail::send('mails.forgot_password', ['url' => $url], function ($message) use ($user) {
-            $message->from('quynb@kaopiz.com', 'Quynb');
+            $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
             $message->to($user->email, $user->name)->subject('Reset Password');
             $message->subject('Reset Password');
         });

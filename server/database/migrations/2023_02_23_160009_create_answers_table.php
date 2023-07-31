@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('description')->max(255);
             $table->unsignedBigInteger('question_id');
+            $table->unsignedSmallInteger('is_correct')->nullable()->default(0);
             $table->timestamps();
         });
     }
