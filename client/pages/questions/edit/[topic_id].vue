@@ -133,6 +133,19 @@ export default {
         topic_id: this.$route.params.topic_id
       })
     },
+    update(question, sort_order) {
+      let saveData = {...question}
+      saveData.sort_order = sort_order
+      saveData.correct_answer = this.correct_answer_mapping[saveData.correct_answer]
+      axios.post(API_URL + 'questions/' + question.id, saveData, generateHeader()).then(res => {
+        console.log(res.data)
+        ElNotification({
+          title: 'Success',
+          message: 'Update question successfully!!',
+          type: 'success'
+        })
+      })
+    },
     saveOne(question, index) {
       let post_data = {...question}
       post_data.sort_order = index

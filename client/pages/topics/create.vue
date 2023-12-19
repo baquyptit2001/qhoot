@@ -52,7 +52,7 @@ export default {
       form: {
         name: 'Đề Ai Eo 10.0',
         description: 'Test ielts 10.0',
-        category_id: 2,
+        category_id: 1,
         image: null
       },
 
@@ -87,7 +87,7 @@ export default {
           message: 'Create topic successfully',
           type: 'success'
         })
-        this.$router.push({name: 'questions-topic_id', params: {topic_id: res.data.topic.id}})
+        this.$router.push({name: 'questions-edit-topic_id', params: {topic_id: res.data.topic.id}})
       })
           .catch(err => {
             console.log(err)

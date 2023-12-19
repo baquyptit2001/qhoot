@@ -50,10 +50,14 @@ class QuestionController extends Controller
         ]);
     }
 
-    public function update(Request $request, Question $question)
+    public function update(Request $request, $id)
     {
         $user = $request->user();
+        $question = Question::find($id);
         if ($question->user_id != $user->id) {
+            Log::channel('debug')->info($user->id);
+            Log::channel('debug')->info($question->user_id);
+            Log::channel('debug')->info($question);
             return response()->json([
                 'message' => 'You are not authorized to update this question',
                 'status_code' => 401,
@@ -66,11 +70,11 @@ class QuestionController extends Controller
         $question->save();
         $answers = array();
         foreach ($request->answers as $key => $answer) {
-            $save = new Answer();
+            $save = Answer::find($answer['id']);
             Log::channel('debug')->info($answer);
             $save->description = $answer['description'];
             $save->question_id = $question->id;
-            $save->is_correct = $key == $request->correct_answer ? true : false;
+            $save->is_correct = $key == $request->correct_answer ? 1 : 0;
             $save->save();
             $answers[] = $save;
         }

@@ -15,6 +15,7 @@ export const useAuthUserStore = defineStore("authUserStore", {
             if (state.user == null) {
                 return null
             }
+            // @ts-ignore
             return state.user.id
         }
     },
@@ -22,15 +23,20 @@ export const useAuthUserStore = defineStore("authUserStore", {
         setUser(user: any) {
             this.user = user
         },
-        fetchUser() {
-            return axios.get(API_URL + 'auth/user', generateHeader()).then((response) => {
-                if (response.data.user == null) {
-                    Cookies.remove('access_token')
+        async fetchUser() {
+            try {
+                let token = Cookies.get('access_token')
+                if (token == null) {
+                    throw new Error('No token')
                 }
-                this.setUser(response.data.user)
-            }).catch((error) => {
-                Cookies.remove('access_token')
-            })
+                const response = await axios.get(API_URL + 'auth/user', generateHeader());
+                if (response.data.user == null) {
+                    Cookies.remove('access_token');
+                }
+                this.setUser(response.data.user);
+            } catch (error) {
+                Cookies.remove('access_token');
+            }
         }
     }
 })

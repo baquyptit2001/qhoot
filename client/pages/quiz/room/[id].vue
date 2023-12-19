@@ -96,9 +96,6 @@ export default {
             userStore
         }
     },
-    beforeRouteLeave(to, from, next) {
-        
-    },
     data() {
         return {
             roomUser: {
@@ -177,7 +174,7 @@ export default {
                 score: 0,
                 user_id: player.user_id
             })
-            thisUserId = player.user_id
+            this.thisUserId = player.user_id
         },
         removePlayer(userId) {
             this.players = this.players.filter(player => player.id != userId)

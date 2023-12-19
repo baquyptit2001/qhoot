@@ -28,10 +28,24 @@ class TruncateTable extends Command
      */
     public function handle()
     {
-        $table = $this->ask('Which table you want to truncate?');
-        $this->info('Truncating table ' . $table);
-        DB::table($table)->truncate();
-        $this->info('Table ' . $table . ' has been truncated');
+        $tables = $this->ask('Which table you want to truncate?');
+        $tables = explode(',', $tables);
+        foreach ($tables as $table) {
+            $this->truncateTable($table);
+        }
+        $this->info('All tables have been truncated');
         return Command::SUCCESS;
+    }
+
+    private function truncateTable($table)
+    {
+        try {
+            $this->info('Truncating table ' . $table);
+            DB::table($table)->truncate();
+            $this->info('Table ' . $table . ' has been truncated');
+        } catch (\Throwable $th) {
+            $this->error('Error truncating table ' . $table);
+            $this->error($th->getMessage());
+        }
     }
 }
